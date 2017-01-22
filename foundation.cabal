@@ -62,6 +62,7 @@ Library
                      Foundation.String.ASCII
                      Foundation.IO
                      Foundation.IO.FileMap
+                     Foundation.IO.Handle
                      Foundation.VFS
                      Foundation.VFS.Path
                      Foundation.VFS.FilePath
