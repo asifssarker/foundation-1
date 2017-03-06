@@ -164,12 +164,14 @@ Library
     Exposed-modules: Foundation.System.Bindings.Windows
     Other-modules:   Foundation.Foreign.MemoryMap.Windows
                      Foundation.System.Entropy.Windows
+                     Foundation.IO.Handle.Windows
   else
     Exposed-modules: Foundation.System.Bindings.Posix
                      Foundation.System.Bindings.PosixDef
                      Foundation.System.Bindings.Hs
     Other-modules:   Foundation.Foreign.MemoryMap.Posix
                      Foundation.System.Entropy.Unix
+                     Foundation.IO.Handle.Posix
   if os(linux)
     Exposed-modules: Foundation.System.Bindings.Linux
   if os(osx)
