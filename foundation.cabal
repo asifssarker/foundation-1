@@ -134,6 +134,7 @@ Library
                      Foundation.Numerical.Floating
                      Foundation.IO.File
                      Foundation.IO.Terminal
+                     Foundation.IO.Handle.Common
                      Foundation.Primitive.Base16
                      Foundation.Primitive.Endianness
                      Foundation.Primitive.Types
@@ -156,6 +157,7 @@ Library
                      Foundation.Foreign.MemoryMap.Types
                      Foundation.Partial
                      Foundation.System.Entropy.Common
+                     Foundation.System.Bindings.Hs
 
   include-dirs:      cbits
   C-sources:         cbits/foundation_random.c
@@ -168,7 +170,6 @@ Library
   else
     Exposed-modules: Foundation.System.Bindings.Posix
                      Foundation.System.Bindings.PosixDef
-                     Foundation.System.Bindings.Hs
     Other-modules:   Foundation.Foreign.MemoryMap.Posix
                      Foundation.System.Entropy.Unix
                      Foundation.IO.Handle.Posix

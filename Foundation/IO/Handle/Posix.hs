@@ -15,10 +15,8 @@ import           System.Posix.Internals hiding (FD)
 import           System.Posix.Types (CSsize(..), CMode(..))
 import           Foundation.System.Bindings.Hs (sysHsCoreGetErrno)
 import           Foundation.System.Bindings.Posix
+import           Foundation.IO.Handle.Common
 
-data HandleError = HandleError String CInt
-    deriving (Show,Eq,Typeable)
-instance Exception HandleError
 
 -- we don't want CSsize to be HasNegative because technically this is just 1 value.
 minus1SSize :: CSsize
@@ -47,7 +45,7 @@ ioPtrRetryLoop ioFct ptr sz = loop ptr sz
                         _ | err == sysPosix_EAGAIN      -> loop p remaining
                           | err == sysPosix_EINTR       -> loop p remaining
                           | err == sysPosix_EWOULDBLOCK -> loop p remaining
-                          | otherwise                   -> throwIO (HandleError "io" err)
+                          | otherwise                   -> throwIO (HandleIOError "io" err)
                 else if ssz == CSsize 0
                         then return (sz - remaining)
                         else

@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Foundation.IO.Handle.Windows
     ( ioPtrRetryLoop
     , ioRead
@@ -5,10 +6,14 @@ module Foundation.IO.Handle.Windows
     ) where
 
 import           Foundation.Internal.Base
+import           Foundation.Internal.Types
+import           Foundation.Numerical
 import           Foreign.C.Types
-import           System.Posix.Internals hiding (FD)
-import           System.Posix.Types (CSsize(..), CMode(..))
+import           System.Posix.Internals
+import           Foundation.System.Bindings.Hs (sysHsCoreGetErrno)
+import           Foundation.System.Bindings.Windows
 import qualified Prelude (fromIntegral)
+import           Foundation.IO.Handle.Common
 
 type BytesToRead = CUInt
 type BytesRead = CInt
@@ -25,22 +30,22 @@ ioPtrRetryLoop :: (Ptr Word8 -> BytesToRead -> IO BytesRead)
                -> IO (Size Word8)
 ioPtrRetryLoop ioFct ptr sz = loop ptr sz
   where
-    csizeOfSize (Size r) = r
+    cuintOfSize (Size r) = Prelude.fromIntegral r
 
     loop !p !remaining
         | remaining == 0   = return sz
         | otherwise        = do
-            ssz <- ioFct p (csizeOfSize remaining)
+            ssz <- ioFct p (cuintOfSize remaining)
             if ssz == -1
                 then do
-                    err <- getErrno
+                    err <- sysHsCoreGetErrno
                     case err of
-                        _ | err == eAGAIN      -> loop p remaining
-                          | err == eINTR       -> loop p remaining
-                          | err == eWOULDBLOCK -> loop p remaining
-                          | otherwise          -> throwErrno err
+                        _ | err == sysPosix_EAGAIN      -> loop p remaining
+                          | err == sysPosix_EINTR       -> loop p remaining
+                          | err == sysPosix_EWOULDBLOCK -> loop p remaining
+                          | otherwise                   -> throwIO (HandleIOError "io" err)
                 else if ssz == 0
                         then return (sz - remaining)
                         else
-                            let got = Size ssz
+                            let got = Size $ Prelude.fromIntegral ssz
                              in loop (p `plusPtrSize` got) (remaining - got)

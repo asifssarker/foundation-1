@@ -22,7 +22,6 @@ import           Foundation.Primitive.Monad
 import qualified Foundation.Array.Unboxed as UA
 import           Foundation.Array.Unboxed
 import           Foundation.Array.Unboxed.Mutable
-import           Foundation.String.UTF8
 import           Foundation.VFS.FilePath
 
 #if defined(mingw32_HOST_OS)
