@@ -21,7 +21,7 @@ typedef enum {
 } clockid_t;
 
 
-static mach_timebase_info_t timebase = {0,0};
+static mach_timebase_info_data_t timebase = {0,0};
 
 int foundation_time_clock_getres(unsigned int clockid, struct timespec *timespec)
 {
